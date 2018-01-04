@@ -9,8 +9,9 @@ import java.util.stream.Collectors;
 
 public abstract class SpeachBuilder<T extends SpeachBuilder<T>> {
 
-  private static final String BREAK_STRENGTH = "<break strength=\"{0}\"/>";
-  private static final String BREAK_TIME = "<break time=\"{0,number,#}ms\"/>";
+  private static final String BREAK_STRENGTH_TAG = "<break strength=\"{0}\"/>";
+  private static final String BREAK_TIME_TAG = "<break time=\"{0,number,#}ms\"/>";
+  private static final String EMPHASIS_TAG = "<emphasis level=\"{1}\">{0}</emphasis>";
 
   protected List<String> elements;
 
@@ -36,13 +37,19 @@ public abstract class SpeachBuilder<T extends SpeachBuilder<T>> {
   
   public T pause(int amount, TemporalUnit unit) {
     Duration duration = Duration.of(amount, unit);
-    elements.add(MessageFormat.format(BREAK_TIME, duration.toMillis()));
+    elements.add(MessageFormat.format(BREAK_TIME_TAG, duration.toMillis()));
 
     return getThis();
   }
   
   public T pause(BreakStrength strength) {
-    elements.add(MessageFormat.format(BREAK_STRENGTH, strength.getKeyword()));
+    elements.add(MessageFormat.format(BREAK_STRENGTH_TAG, strength.getValue()));
+    
+    return getThis();
+  }
+  
+  public T emphasize(String words, EmphasisType type) {
+    elements.add(MessageFormat.format(EMPHASIS_TAG, escape(words), type.getValue()));
     
     return getThis();
   }
