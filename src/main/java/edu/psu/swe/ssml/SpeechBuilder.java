@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class SpeachBuilder<T extends SpeachBuilder<T>> {
+public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
 
   DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
   DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH mm a");
@@ -25,16 +25,16 @@ public abstract class SpeachBuilder<T extends SpeachBuilder<T>> {
 
   protected List<String> elements;
 
-  protected SpeachBuilder() {
+  protected SpeechBuilder() {
     this.elements = new ArrayList<>();
   }
   
-  public static AlexaSpeachBuilder alexa() {
-    return AlexaSpeachBuilder.builder();
+  public static AlexaSpeechBuilder alexa() {
+    return AlexaSpeechBuilder.builder();
   }
   
-  public static GenericSpeachBuilder basic() {
-    return GenericSpeachBuilder.builder();
+  public static GenericSpeechBuilder basic() {
+    return GenericSpeechBuilder.builder();
   }
 
   public T say(String words) {

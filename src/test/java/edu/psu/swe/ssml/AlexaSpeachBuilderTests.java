@@ -18,7 +18,7 @@ public class AlexaSpeachBuilderTests {
 
   @Test
   public void testWhisperSomething() {
-    String ssml = AlexaSpeachBuilder.builder()
+    String ssml = AlexaSpeechBuilder.builder()
                                .say("Can I tell you a secret?")
                                .whisper("secret")
                                .ssml();
@@ -28,7 +28,7 @@ public class AlexaSpeachBuilderTests {
   
   @Test
   public void testWithATime() {
-    String ssml = AlexaSpeachBuilder.builder()
+    String ssml = AlexaSpeechBuilder.builder()
                                .say("Know what time it is?")
                                .time(LocalTime.now())
                                .ssml();
@@ -39,7 +39,7 @@ public class AlexaSpeachBuilderTests {
 
   @Test
   public void testWithADate() {
-    String ssml = AlexaSpeachBuilder.builder()
+    String ssml = AlexaSpeechBuilder.builder()
                                .say("Know what the date is?")
                                .date(LocalDate.now(), SSMLDateFormat.DAY_MONTH_YEAR)
                                .ssml();
@@ -50,7 +50,7 @@ public class AlexaSpeachBuilderTests {
   
   @Test
   public void testWithSayAs() {
-    String ssml = AlexaSpeachBuilder.builder()
+    String ssml = AlexaSpeechBuilder.builder()
                                .say("Know what you can do?")
                                .sayAs(SsmlSayAsType.EXPLETIVE, "Smile")
                                .say("widely")
