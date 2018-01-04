@@ -7,43 +7,49 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SpeachBuilder {
+public abstract class SpeachBuilder<T extends SpeachBuilder<T>> {
 
   private static final String BREAK_STRENGTH = "<break strength=\"{0}\"/>";
   private static final String BREAK_TIME = "<break time=\"{0,number,#}ms\"/>";
 
-  private List<String> elements;
+  protected List<String> elements;
 
-  public SpeachBuilder() {
+  protected SpeachBuilder() {
     this.elements = new ArrayList<>();
   }
+  
+  public static AlexaSpeachBuilder alexa() {
+    return AlexaSpeachBuilder.builder();
+  }
+  
+  public static GenericSpeachBuilder basic() {
+    return GenericSpeachBuilder.builder();
+  }
 
-  public SpeachBuilder say(String words) {
+  public T say(String words) {
     if (words != null) {
       elements.add(escape(words));
     }
     
-    return this;
+    return getThis();
   }
   
-  public SpeachBuilder pause(int amount, TemporalUnit unit) {
+  public T pause(int amount, TemporalUnit unit) {
     Duration duration = Duration.of(amount, unit);
     elements.add(MessageFormat.format(BREAK_TIME, duration.toMillis()));
 
-    return this;
+    return getThis();
   }
   
-  public SpeachBuilder pause(BreakStrength strength) {
+  public T pause(BreakStrength strength) {
     elements.add(MessageFormat.format(BREAK_STRENGTH, strength.getKeyword()));
     
-    return this;
+    return getThis();
   }
+  
+  protected abstract T getThis();
 
-  public static SpeachBuilder builder() {
-    return new SpeachBuilder();
-  }
-
-  private String escape(String word) {
+  protected String escape(String word) {
     word = word.replace("&", "and");
     word = word.replace("<", "");
     word = word.replace(">", "");
