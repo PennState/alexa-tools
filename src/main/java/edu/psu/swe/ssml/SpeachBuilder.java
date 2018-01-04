@@ -1,7 +1,11 @@
 package edu.psu.swe.ssml;
 
 import java.text.MessageFormat;
+import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +13,15 @@ import java.util.stream.Collectors;
 
 public abstract class SpeachBuilder<T extends SpeachBuilder<T>> {
 
+  DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+  DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH mm a");
+
+  
   private static final String BREAK_STRENGTH_TAG = "<break strength=\"{0}\"/>";
   private static final String BREAK_TIME_TAG = "<break time=\"{0,number,#}ms\"/>";
   private static final String EMPHASIS_TAG = "<emphasis level=\"{1}\">{0}</emphasis>";
+  private static final String SAY_AS_TAG = "<say-as interpret-as=\"{0}\">{1}</say-as>";
+  private static final String SAY_AS_DATE_TAG = "<say-as interpret-as=\"date\" format=\"{0}\">{1}</say-as>";
 
   protected List<String> elements;
 
@@ -51,6 +61,28 @@ public abstract class SpeachBuilder<T extends SpeachBuilder<T>> {
   public T emphasize(String words, EmphasisType type) {
     elements.add(MessageFormat.format(EMPHASIS_TAG, escape(words), type.getValue()));
     
+    return getThis();
+  }
+  
+  public T date(LocalDate localDate, SSMLDateFormat format) {
+    elements.add(MessageFormat.format(SAY_AS_DATE_TAG, format.asSsml(), localDate.format(dateTimeFormatter)));
+    
+    return getThis();
+  }
+  
+  public T time(LocalTime localTime) {
+    elements.add(localTime.format(timeFormatter));
+    
+    return getThis();  
+  }
+  
+  public T sayAs(SsmlSayAsType type, String value) {
+    elements.add(MessageFormat.format(SAY_AS_TAG, type.asSsml(), value));
+    return getThis();
+  }
+  
+  public T weekday(DayOfWeek dayOfWeek) {
+    elements.add(dayOfWeek.name());
     return getThis();
   }
   
