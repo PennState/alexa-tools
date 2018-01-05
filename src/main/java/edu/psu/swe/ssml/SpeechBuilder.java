@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
 
   DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-  DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH mm a");
+  //DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH mm a");
 
   private static final String BREAK_STRENGTH_TAG = "<break strength=\"{0}\"/>";
   private static final String BREAK_TIME_TAG = "<break time=\"{0,number,#}ms\"/>";
@@ -76,7 +76,41 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
   }
 
   public T time(LocalTime localTime) {
-    elements.add(localTime.format(timeFormatter));
+    int hours = localTime.getHour();
+    int minutes = localTime.getMinute();
+    boolean pm = false;
+    boolean onTheHour = false;
+    
+    if (hours > 12) {
+      pm = true;
+      hours -= 12;
+    }
+    
+    if (minutes == 0) {
+      onTheHour = true;
+    }
+    
+    String minutesString = Integer.toString(minutes);
+    if (minutes < 10 && !onTheHour) {
+      minutesString = "0" + Integer.toString(minutes);  
+    }
+    
+    StringBuilder sb = new StringBuilder();
+    sb.append(hours);
+    if (onTheHour) {
+      sb.append(" oclock");
+    } else {
+      sb.append(" ");
+      sb.append(minutesString);
+    }
+    
+    if (pm) {
+      sb.append(" PM");
+    } else {
+      sb.append(" AM");
+    }
+    
+    elements.add(sb.toString());
 
     return getThis();
   }

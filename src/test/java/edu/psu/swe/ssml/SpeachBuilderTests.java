@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -103,7 +104,7 @@ public class SpeachBuilderTests {
 
     System.out.println(ssml);
   }
-
+  
   @Test
   public void testPhoneme() {
     String ssml = SpeechBuilder.basic()
@@ -111,5 +112,20 @@ public class SpeachBuilderTests {
                                .ssml();
     System.out.println(ssml);
 
+  }
+  
+  @Test
+  public void testWithMultiples() {
+    String ssml = AlexaSpeechBuilder.builder()
+                               .say("Know what the day and time is?")
+                               .weekday(DayOfWeek.THURSDAY)
+                               .pause(BreakStrength.MEDIUM)
+                               .date(LocalDate.now(), SSMLDateFormat.DAY_MONTH_YEAR)
+                               .pause(BreakStrength.MEDIUM)
+                               .time(LocalTime.now())
+                               .ssml();
+    
+    System.out.println(ssml);
+    //assertThat(ssml, equalTo("<speak>Can I tell you a secret? <amazon:effect name=\"whispered\">secret</amazon:effect></speak>"));
   }
 }
