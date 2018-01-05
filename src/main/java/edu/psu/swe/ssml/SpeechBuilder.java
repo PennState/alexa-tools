@@ -29,6 +29,10 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
   private static final String PARAGRAPH_TAG = "<p>{0}</p>";
 
   protected List<String> elements;
+  
+  protected Pitch pitch;
+  protected Rate rate;
+  protected Volume volume;
 
   protected SpeechBuilder() {
     this.elements = new ArrayList<>();
@@ -44,9 +48,16 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
 
   public T say(String words) {
     if (words != null) {
-      elements.add(escape(words));
+      addElement(escape(words));
     }
 
+    return getThis();
+  }
+  
+  public T say(Supplier<SpeechBuilder<?>> contents) {
+    String ssml = contents.get().ssml(true);
+    addElement(ssml);
+    
     return getThis();
   }
 
@@ -64,13 +75,13 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
   }
 
   public T emphasize(String words, EmphasisType type) {
-    elements.add(MessageFormat.format(EMPHASIS_TAG, escape(words), type.getValue()));
+    addElement(MessageFormat.format(EMPHASIS_TAG, escape(words), type.getValue()));
 
     return getThis();
   }
 
   public T date(LocalDate localDate, SSMLDateFormat format) {
-    elements.add(MessageFormat.format(SAY_AS_DATE_TAG, format.asSsml(), localDate.format(dateTimeFormatter)));
+    addElement(MessageFormat.format(SAY_AS_DATE_TAG, format.asSsml(), localDate.format(dateTimeFormatter)));
 
     return getThis();
   }
@@ -110,18 +121,18 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
       sb.append(" AM");
     }
     
-    elements.add(sb.toString());
+    addElement(sb.toString());
 
     return getThis();
   }
 
   public T sayAs(SsmlSayAsType type, String value) {
-    elements.add(MessageFormat.format(SAY_AS_TAG, type.asSsml(), value));
+    addElement(MessageFormat.format(SAY_AS_TAG, type.asSsml(), value));
     return getThis();
   }
 
   public T weekday(DayOfWeek dayOfWeek) {
-    elements.add(dayOfWeek.name());
+    addElement(dayOfWeek.name());
     return getThis();
   }
 
@@ -133,12 +144,12 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
   }
 
   public T phoneme(String word, String phoneme, PhoneticAlphabet type) {
-    elements.add(MessageFormat.format(PHONEME_TAG, type.getValue(), phoneme, escape(word)));
+    addElement(MessageFormat.format(PHONEME_TAG, type.getValue(), phoneme, escape(word)));
     return getThis();
   }
 
   public T sentence(String contents) {
-    elements.add(MessageFormat.format(SENTENCE_TAG, contents));
+    addElement(MessageFormat.format(SENTENCE_TAG, contents));
     return getThis();
   }
   
@@ -147,7 +158,7 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
   }
 
   public T paragraph(String contents) {
-    elements.add(MessageFormat.format(PARAGRAPH_TAG, contents));
+    addElement(MessageFormat.format(PARAGRAPH_TAG, contents));
     return getThis();
   }
   
@@ -155,6 +166,74 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
     return paragraph(contents.get().ssml(true));
   }
 
+  public T withPitch(Pitch pitch) {
+    this.pitch = pitch;
+    return getThis();
+  }
+  
+  public T withRate(Rate rate) {
+    this.rate = rate;
+    return getThis();
+  }
+  
+  public T withVolume(Volume volume) {
+    this.volume = volume;
+    return getThis();
+  }
+  
+  private void addElement(String contents) {
+    String checkWrapWithProsody = checkWrapWithProsody(contents);
+    this.elements.add(checkWrapWithProsody);
+    resetProsody();
+  }
+  
+  private String checkWrapWithProsody(String contents) {
+    int numParams = 0;
+    if (rate != null) {
+      numParams++;
+    }
+    if (pitch != null) {
+      numParams++;
+    }
+    if (volume != null) {
+      numParams++;
+    }
+    if (numParams == 0) {
+      return contents;
+    }
+    
+    StringBuilder sb = new StringBuilder();
+    sb.append("<prosody ");
+    
+    if (pitch != null) {
+      sb.append("pitch=\"").append(pitch.getValue()).append("\"");
+      sb.append(numParams-- > 1 ? " " : "");
+    }
+    
+    if (rate != null) {
+      sb.append("rate=\"").append(rate.getValue()).append("\"");
+      sb.append(numParams > 1 ? " " : "");
+    }
+    
+    if (volume != null) {
+      sb.append("volume=\"").append(volume.getValue()).append("\"");
+    }
+    
+    sb.append(">");
+    
+    sb.append(contents);
+    
+    sb.append("</prosody>");
+    
+    return sb.toString();
+  }
+  
+  private void resetProsody() {
+    pitch = null;
+    rate = null;
+    volume = null;
+  }
+  
   protected abstract T getThis();
 
   protected String escape(String word) {

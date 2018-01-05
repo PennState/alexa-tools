@@ -128,4 +128,19 @@ public class SpeachBuilderTests {
     System.out.println(ssml);
     //assertThat(ssml, equalTo("<speak>Can I tell you a secret? <amazon:effect name=\"whispered\">secret</amazon:effect></speak>"));
   }
+  
+  @Test
+  public void testProsody() {
+    String ssml = AlexaSpeechBuilder.builder().withRate(Rate.X_FAST).withPitch(Pitch.HIGH).withVolume(Volume.LOUD)
+                               .say("Know what the day and time is?")
+                               .weekday(DayOfWeek.THURSDAY)
+                               .pause(BreakStrength.MEDIUM)
+                               .date(LocalDate.now(), SSMLDateFormat.DAY_MONTH_YEAR)
+                               .pause(BreakStrength.MEDIUM)
+                               .time(LocalTime.now())
+                               .ssml();
+    
+    System.out.println(ssml);
+    //assertThat(ssml, equalTo("<speak>Can I tell you a secret? <amazon:effect name=\"whispered\">secret</amazon:effect></speak>"));
+  }
 }
