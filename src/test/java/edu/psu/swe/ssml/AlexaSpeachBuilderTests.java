@@ -63,7 +63,7 @@ public class AlexaSpeachBuilderTests {
   
   @Test
   public void testWithMultiples() {
-    String ssml = AlexaSpeachBuilder.builder()
+    String ssml = AlexaSpeechBuilder.builder()
                                .say("Know what the day and time is?")
                                .weekday(DayOfWeek.THURSDAY)
                                .pause(BreakStrength.MEDIUM)
