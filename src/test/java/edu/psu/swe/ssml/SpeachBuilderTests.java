@@ -17,7 +17,7 @@ public class SpeachBuilderTests {
 
   @Test
   public void testSaySomething() {
-    String ssml = SpeachBuilder.basic()
+    String ssml = SpeechBuilder.basic()
                                .say("something")
                                .ssml();
     
@@ -26,7 +26,7 @@ public class SpeachBuilderTests {
 
   @Test
   public void testEscape() {
-    String ssml = SpeachBuilder.basic()
+    String ssml = SpeechBuilder.basic()
                                .say("peanut butter & jelly")
                                .ssml();
     
@@ -35,7 +35,7 @@ public class SpeachBuilderTests {
   
   @Test
   public void testPauseStrength() {
-    String ssml = SpeachBuilder.basic()
+    String ssml = SpeechBuilder.basic()
                                .say("peanut butter")
                                .pause(BreakStrength.MEDIUM)
                                .say("& jelly")
@@ -46,7 +46,7 @@ public class SpeachBuilderTests {
   
   @Test
   public void testPauseTime() {
-    String ssml = SpeachBuilder.basic()
+    String ssml = SpeechBuilder.basic()
                                .say("peanut butter")
                                .pause(1, ChronoUnit.SECONDS)
                                .say("& jelly")

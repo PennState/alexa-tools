@@ -2,15 +2,15 @@ package edu.psu.swe.ssml;
 
 import java.text.MessageFormat;
 
-public class AlexaSpeachBuilder extends SpeachBuilder<AlexaSpeachBuilder> {
+public class AlexaSpeechBuilder extends SpeechBuilder<AlexaSpeechBuilder> {
 
   private static final String WHISPER = "<amazon:effect name=\"whispered\">{0}</amazon:effect>";
   
-  private AlexaSpeachBuilder() {
+  private AlexaSpeechBuilder() {
     
   }
   
-  public SpeachBuilder<AlexaSpeachBuilder> whisper(String words) {
+  public SpeechBuilder<AlexaSpeechBuilder> whisper(String words) {
     if (words != null) {
       elements.add(MessageFormat.format(WHISPER, escape(words)));
     }
@@ -18,12 +18,12 @@ public class AlexaSpeachBuilder extends SpeachBuilder<AlexaSpeachBuilder> {
     return this;
   }
   
-  public static AlexaSpeachBuilder builder() {
-    return new AlexaSpeachBuilder();
+  public static AlexaSpeechBuilder builder() {
+    return new AlexaSpeechBuilder();
   }
 
   @Override
-  protected AlexaSpeachBuilder getThis() {
+  protected AlexaSpeechBuilder getThis() {
     return this;
   }
   
