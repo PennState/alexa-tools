@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,6 +24,9 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
   private static final String SAY_AS_TAG = "<say-as interpret-as=\"{0}\">{1}</say-as>";
   private static final String SAY_AS_DATE_TAG = "<say-as interpret-as=\"date\" format=\"{0}\">{1}</say-as>";
   private static final String PHONEME_TAG = "<phoneme alphabet=\"{0}\" ph=\"{1}\">{2}</phoneme>";
+
+  private static final String SENTENCE_TAG = "<s>{0}</s>";
+  private static final String PARAGRAPH_TAG = "<p>{0}</p>";
 
   protected List<String> elements;
 
@@ -87,8 +91,10 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
     return getThis();
   }
 
-  public T phoneme(String word, PhoneticSymbol ...phonemeSymbols) {
-    String phoneme = Stream.of(phonemeSymbols).map(PhoneticSymbol::getIpaSymbol).collect(Collectors.joining());
+  public T phoneme(String word, PhoneticSymbol... phonemeSymbols) {
+    String phoneme = Stream.of(phonemeSymbols)
+                           .map(PhoneticSymbol::getIpaSymbol)
+                           .collect(Collectors.joining());
     return phoneme(word, phoneme, PhoneticAlphabet.IPA);
   }
 
@@ -96,7 +102,25 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
     elements.add(MessageFormat.format(PHONEME_TAG, type.getValue(), phoneme, escape(word)));
     return getThis();
   }
+
+  public T sentence(String contents) {
+    elements.add(MessageFormat.format(SENTENCE_TAG, contents));
+    return getThis();
+  }
   
+  public T sentence(Supplier<SpeechBuilder<?>> contents) {
+    return sentence(contents.get().ssml(true));
+  }
+
+  public T paragraph(String contents) {
+    elements.add(MessageFormat.format(PARAGRAPH_TAG, contents));
+    return getThis();
+  }
+  
+  public T paragraph(Supplier<SpeechBuilder<?>> contents) {
+    return paragraph(contents.get().ssml(true));
+  }
+
   protected abstract T getThis();
 
   protected String escape(String word) {
@@ -109,9 +133,23 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
   }
 
   public String ssml() {
-    return "<speak>" + elements.stream()
-                               .collect(Collectors.joining(" "))
-        + "</speak>";
+    return ssml(false);
+  }
+
+  String ssml(boolean embed) {
+    StringBuilder sb = new StringBuilder();
+
+    if (!embed) {
+      sb.append("<speak>");
+    }
+    sb.append(elements.stream()
+                      .collect(Collectors.joining(" ")));
+
+    if (!embed) {
+      sb.append("</speak>");
+    }
+
+    return sb.toString();
   }
 
 }

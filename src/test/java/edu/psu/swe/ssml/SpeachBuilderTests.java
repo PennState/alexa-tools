@@ -36,6 +36,22 @@ public class SpeachBuilderTests {
   }
 
   @Test
+  public void testParagraph() {
+    String ssml2 = SpeechBuilder.alexa()
+                                .sentence(() -> SpeechBuilder.alexa()
+                                                             .whisper("hello")
+                                                             .say("world"))
+                                .say("Something")
+                                .ssml();
+
+    String ssml3 = SpeechBuilder.alexa()
+                                .sentence("hello world")
+                                .say("Something")
+                                .ssml();
+
+  }
+
+  @Test
   public void testPauseStrength() {
     String ssml = SpeechBuilder.basic()
                                .say("peanut butter")
