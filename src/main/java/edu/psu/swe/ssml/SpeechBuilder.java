@@ -16,13 +16,14 @@ import java.util.stream.Stream;
 public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
 
   DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-  //DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH mm a");
+  DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm a");
 
   private static final String BREAK_STRENGTH_TAG = "<break strength=\"{0}\"/>";
   private static final String BREAK_TIME_TAG = "<break time=\"{0,number,#}ms\"/>";
   private static final String EMPHASIS_TAG = "<emphasis level=\"{1}\">{0}</emphasis>";
   private static final String SAY_AS_TAG = "<say-as interpret-as=\"{0}\">{1}</say-as>";
   private static final String SAY_AS_DATE_TAG = "<say-as interpret-as=\"date\" format=\"{0}\">{1}</say-as>";
+  private static final String SAY_AS_TIME_TAG = "<say-as interpret-as=\"time\" format=\"{0}\">{1}</say-as>";
   private static final String PHONEME_TAG = "<phoneme alphabet=\"{0}\" ph=\"{1}\">{2}</phoneme>";
 
   private static final String SENTENCE_TAG = "<s>{0}</s>";
@@ -86,42 +87,44 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
     return getThis();
   }
 
-  public T time(LocalTime localTime) {
-    int hours = localTime.getHour();
-    int minutes = localTime.getMinute();
-    boolean pm = false;
-    boolean onTheHour = false;
-    
-    if (hours > 12) {
-      pm = true;
-      hours -= 12;
-    }
-    
-    if (minutes == 0) {
-      onTheHour = true;
-    }
-    
-    String minutesString = Integer.toString(minutes);
-    if (minutes < 10 && !onTheHour) {
-      minutesString = "0" + Integer.toString(minutes);  
-    }
-    
-    StringBuilder sb = new StringBuilder();
-    sb.append(hours);
-    if (onTheHour) {
-      sb.append(" oclock");
-    } else {
-      sb.append(" ");
-      sb.append(minutesString);
-    }
-    
-    if (pm) {
-      sb.append(" PM");
-    } else {
-      sb.append(" AM");
-    }
-    
-    addElement(sb.toString());
+  public T time(LocalTime localTime, SSMLTimeFormat format) {
+    addElement(MessageFormat.format(SAY_AS_TIME_TAG, format.asSsml(), localTime.format(dateTimeFormatter)));
+
+//    int hours = localTime.getHour();
+//    int minutes = localTime.getMinute();
+//    boolean pm = false;
+//    boolean onTheHour = false;
+//    
+//    if (hours > 12) {
+//      pm = true;
+//      hours -= 12;
+//    }
+//    
+//    if (minutes == 0) {
+//      onTheHour = true;
+//    }
+//    
+//    String minutesString = Integer.toString(minutes);
+//    if (minutes < 10 && !onTheHour) {
+//      minutesString = "0" + Integer.toString(minutes);  
+//    }
+//    
+//    StringBuilder sb = new StringBuilder();
+//    sb.append(hours);
+//    if (onTheHour) {
+//      sb.append(" oclock");
+//    } else {
+//      sb.append(" ");
+//      sb.append(minutesString);
+//    }
+//    
+//    if (pm) {
+//      sb.append(" PM");
+//    } else {
+//      sb.append(" AM");
+//    }
+//    
+//    addElement(sb.toString());
 
     return getThis();
   }

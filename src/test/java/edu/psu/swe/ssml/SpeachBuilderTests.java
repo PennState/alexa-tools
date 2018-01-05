@@ -78,7 +78,7 @@ public class SpeachBuilderTests {
   public void testWithATime() {
     String ssml = AlexaSpeechBuilder.builder()
                                     .say("Know what time it is?")
-                                    .time(LocalTime.now())
+                                    .time(LocalTime.now(), SSMLTimeFormat.TWENTY_FOUR_HOUR_CLOCK)
                                     .ssml();
 
     System.out.println(ssml);
@@ -122,7 +122,7 @@ public class SpeachBuilderTests {
                                .pause(BreakStrength.MEDIUM)
                                .date(LocalDate.now(), SSMLDateFormat.DAY_MONTH_YEAR)
                                .pause(BreakStrength.MEDIUM)
-                               .time(LocalTime.now())
+                               .time(LocalTime.now(), SSMLTimeFormat.TWENTY_FOUR_HOUR_CLOCK)
                                .ssml();
     
     System.out.println(ssml);
@@ -137,7 +137,7 @@ public class SpeachBuilderTests {
                                .pause(BreakStrength.MEDIUM)
                                .date(LocalDate.now(), SSMLDateFormat.DAY_MONTH_YEAR)
                                .pause(BreakStrength.MEDIUM)
-                               .time(LocalTime.now())
+                               .time(LocalTime.now(), SSMLTimeFormat.TWENTY_FOUR_HOUR_CLOCK)
                                .ssml();
     
     System.out.println(ssml);
