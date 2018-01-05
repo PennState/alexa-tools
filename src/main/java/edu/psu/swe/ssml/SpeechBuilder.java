@@ -10,29 +10,30 @@ import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
 
   DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
   DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH mm a");
 
-  
   private static final String BREAK_STRENGTH_TAG = "<break strength=\"{0}\"/>";
   private static final String BREAK_TIME_TAG = "<break time=\"{0,number,#}ms\"/>";
   private static final String EMPHASIS_TAG = "<emphasis level=\"{1}\">{0}</emphasis>";
   private static final String SAY_AS_TAG = "<say-as interpret-as=\"{0}\">{1}</say-as>";
   private static final String SAY_AS_DATE_TAG = "<say-as interpret-as=\"date\" format=\"{0}\">{1}</say-as>";
+  private static final String PHONEME_TAG = "<phoneme alphabet=\"{0}\" ph=\"{1}\">{2}</phoneme>";
 
   protected List<String> elements;
 
   protected SpeechBuilder() {
     this.elements = new ArrayList<>();
   }
-  
+
   public static AlexaSpeechBuilder alexa() {
     return AlexaSpeechBuilder.builder();
   }
-  
+
   public static GenericSpeechBuilder basic() {
     return GenericSpeechBuilder.builder();
   }
@@ -41,48 +42,58 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
     if (words != null) {
       elements.add(escape(words));
     }
-    
+
     return getThis();
   }
-  
+
   public T pause(int amount, TemporalUnit unit) {
     Duration duration = Duration.of(amount, unit);
     elements.add(MessageFormat.format(BREAK_TIME_TAG, duration.toMillis()));
 
     return getThis();
   }
-  
+
   public T pause(BreakStrength strength) {
     elements.add(MessageFormat.format(BREAK_STRENGTH_TAG, strength.getValue()));
-    
+
     return getThis();
   }
-  
+
   public T emphasize(String words, EmphasisType type) {
     elements.add(MessageFormat.format(EMPHASIS_TAG, escape(words), type.getValue()));
-    
+
     return getThis();
   }
-  
+
   public T date(LocalDate localDate, SSMLDateFormat format) {
     elements.add(MessageFormat.format(SAY_AS_DATE_TAG, format.asSsml(), localDate.format(dateTimeFormatter)));
-    
+
     return getThis();
   }
-  
+
   public T time(LocalTime localTime) {
     elements.add(localTime.format(timeFormatter));
-    
-    return getThis();  
+
+    return getThis();
   }
-  
+
   public T sayAs(SsmlSayAsType type, String value) {
     elements.add(MessageFormat.format(SAY_AS_TAG, type.asSsml(), value));
     return getThis();
   }
-  
+
   public T weekday(DayOfWeek dayOfWeek) {
     elements.add(dayOfWeek.name());
+    return getThis();
+  }
+
+  public T phoneme(String word, PhoneticSymbol ...phonemeSymbols) {
+    String phoneme = Stream.of(phonemeSymbols).map(PhoneticSymbol::getIpaSymbol).collect(Collectors.joining());
+    return phoneme(word, phoneme, PhoneticAlphabet.IPA);
+  }
+
+  public T phoneme(String word, String phoneme, PhoneticAlphabet type) {
+    elements.add(MessageFormat.format(PHONEME_TAG, type.getValue(), phoneme, escape(word)));
     return getThis();
   }
   
