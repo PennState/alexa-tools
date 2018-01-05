@@ -96,6 +96,7 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
     if (onTheHour) {
       sb.append(" oclock");
     } else {
+      sb.append(" ");
       sb.append(minutesString);
     }
     
