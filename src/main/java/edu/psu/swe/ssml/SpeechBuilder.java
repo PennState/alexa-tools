@@ -88,43 +88,43 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
   }
 
   public T time(LocalTime localTime, SSMLTimeFormat format) {
-    addElement(MessageFormat.format(SAY_AS_TIME_TAG, format.asSsml(), localTime.format(timeFormatter)));
+//    addElement(MessageFormat.format(SAY_AS_TIME_TAG, format.asSsml(), localTime.format(timeFormatter)));
 
-//    int hours = localTime.getHour();
-//    int minutes = localTime.getMinute();
-//    boolean pm = false;
-//    boolean onTheHour = false;
-//    
-//    if (hours > 12) {
-//      pm = true;
-//      hours -= 12;
-//    }
-//    
-//    if (minutes == 0) {
-//      onTheHour = true;
-//    }
-//    
-//    String minutesString = Integer.toString(minutes);
-//    if (minutes < 10 && !onTheHour) {
-//      minutesString = "0" + Integer.toString(minutes);  
-//    }
-//    
-//    StringBuilder sb = new StringBuilder();
-//    sb.append(hours);
-//    if (onTheHour) {
-//      sb.append(" oclock");
-//    } else {
-//      sb.append(" ");
-//      sb.append(minutesString);
-//    }
-//    
-//    if (pm) {
-//      sb.append(" PM");
-//    } else {
-//      sb.append(" AM");
-//    }
-//    
-//    addElement(sb.toString());
+    int hours = localTime.getHour();
+    int minutes = localTime.getMinute();
+    boolean pm = false;
+    boolean onTheHour = false;
+    
+    if (hours > 12) {
+      pm = true;
+      hours -= 12;
+    }
+    
+    if (minutes == 0) {
+      onTheHour = true;
+    }
+    
+    String minutesString = Integer.toString(minutes);
+    if (minutes < 10 && !onTheHour) {
+      minutesString = "0" + Integer.toString(minutes);  
+    }
+    
+    StringBuilder sb = new StringBuilder();
+    sb.append(hours);
+    if (onTheHour) {
+      sb.append(" O'Clock");
+    } else {
+      sb.append(" ");
+      sb.append(minutesString);
+    }
+    
+    if (pm) {
+      sb.append(" PM");
+    } else {
+      sb.append(" AM");
+    }
+    
+    addElement(sb.toString());
 
     return getThis();
   }
@@ -252,6 +252,10 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
     return ssml(false);
   }
 
+  public String asFragment() {
+    return ssml(true);
+  }
+  
   String ssml(boolean embed) {
     StringBuilder sb = new StringBuilder();
 
