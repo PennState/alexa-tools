@@ -16,14 +16,14 @@ import java.util.stream.Stream;
 public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
 
   DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-  DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm a");
+  //DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm a");
 
   private static final String BREAK_STRENGTH_TAG = "<break strength=\"{0}\"/>";
   private static final String BREAK_TIME_TAG = "<break time=\"{0,number,#}ms\"/>";
   private static final String EMPHASIS_TAG = "<emphasis level=\"{1}\">{0}</emphasis>";
   private static final String SAY_AS_TAG = "<say-as interpret-as=\"{0}\">{1}</say-as>";
   private static final String SAY_AS_DATE_TAG = "<say-as interpret-as=\"date\" format=\"{0}\">{1}</say-as>";
-  private static final String SAY_AS_TIME_TAG = "<say-as interpret-as=\"time\" format=\"{0}\">{1}</say-as>";
+//  private static final String SAY_AS_TIME_TAG = "<say-as interpret-as=\"time\" format=\"{0}\">{1}</say-as>";
   private static final String PHONEME_TAG = "<phoneme alphabet=\"{0}\" ph=\"{1}\">{2}</phoneme>";
 
   private static final String SENTENCE_TAG = "<s>{0}</s>";
@@ -87,7 +87,7 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
     return getThis();
   }
 
-  public T time(LocalTime localTime, SSMLTimeFormat format) {
+  public T time(LocalTime localTime) {
 //    addElement(MessageFormat.format(SAY_AS_TIME_TAG, format.asSsml(), localTime.format(timeFormatter)));
 
     int hours = localTime.getHour();
@@ -271,5 +271,4 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
 
     return sb.toString();
   }
-
 }
