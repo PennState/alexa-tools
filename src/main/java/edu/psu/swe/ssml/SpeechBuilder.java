@@ -88,7 +88,7 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
   }
 
   public T time(LocalTime localTime, SSMLTimeFormat format) {
-    addElement(MessageFormat.format(SAY_AS_TIME_TAG, format.asSsml(), localTime.format(dateTimeFormatter)));
+    addElement(MessageFormat.format(SAY_AS_TIME_TAG, format.asSsml(), localTime.format(timeFormatter)));
 
 //    int hours = localTime.getHour();
 //    int minutes = localTime.getMinute();
