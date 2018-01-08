@@ -48,10 +48,17 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
   }
 
   public T say(String words) {
+    return say(words, true);
+  }
+  
+  public T say(String words, boolean escapeChars) {
     if (words != null) {
-      addElement(escape(words));
+      if (escapeChars) {
+        addElement(escape(words));
+      } else {
+        addElement(words);
+      }
     }
-
     return getThis();
   }
   
@@ -152,7 +159,18 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
   }
 
   public T sentence(String contents) {
-    addElement(MessageFormat.format(SENTENCE_TAG, contents));
+    return sentence(contents, true);
+  }
+  
+  public T sentence(String contents, boolean escapeChars) {
+    if (contents != null) {
+      if (escapeChars) {
+        addElement(MessageFormat.format(SENTENCE_TAG, escape(contents)));
+      } else {
+        addElement(MessageFormat.format(SENTENCE_TAG, contents));
+      }
+    }
+    
     return getThis();
   }
   
@@ -161,7 +179,18 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
   }
 
   public T paragraph(String contents) {
-    addElement(MessageFormat.format(PARAGRAPH_TAG, contents));
+    return paragraph(contents, true);
+  }
+  
+  public T paragraph(String contents, boolean escapeChars) {
+    if (contents != null) {
+      if (escapeChars) {
+        addElement(MessageFormat.format(PARAGRAPH_TAG, escape(contents)));
+      } else {
+        addElement(MessageFormat.format(PARAGRAPH_TAG, contents));
+      }
+    }
+    
     return getThis();
   }
   

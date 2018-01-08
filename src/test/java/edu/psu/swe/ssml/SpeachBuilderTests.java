@@ -115,6 +115,24 @@ public class SpeachBuilderTests {
   }
   
   @Test
+  public void testFragment() {
+    String fragment = SpeechBuilder.basic()
+        .say("The venue ")
+        .phoneme("Edomae", "EdoUmaI", PhoneticAlphabet.X_SEMPA)
+        .say(" is open")
+        .weekday(DayOfWeek.MONDAY)
+        .say("through")
+        .weekday(DayOfWeek.SATURDAY)
+        .say("from")
+        .time(LocalTime.of(17, 30))
+        .say("to")
+        .time(LocalTime.of(23, 23))
+        .asFragment();
+     
+    System.out.println(AlexaSpeechBuilder.builder().say(fragment, false).ssml());
+  }
+  
+  @Test
   public void testWithMultiples() {
     String ssml = AlexaSpeechBuilder.builder()
                                .say("Know what the day and time is?")
