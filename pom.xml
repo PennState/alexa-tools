@@ -13,9 +13,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>edu.psu.swe</groupId>
-  <artifactId>ssml-builder</artifactId>
-  <name>SSML Builder</name>
-  <description>This library creates Speech Synthesis Markup Language (SSML) using the builder pattern.</description>
+  <artifactId>alexa-tools</artifactId>
+  <name>Alexa Tools</name>
+  <description>This library is a set of utility methods to help in building Alexa Skills</description>
   <url>https://github.com/PennState/ssml-builder</url>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
