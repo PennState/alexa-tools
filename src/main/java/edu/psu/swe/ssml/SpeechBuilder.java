@@ -88,6 +88,10 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
     return getThis();
   }
 
+  public T date(LocalDate localDate) {
+    return date(localDate, SSMLDateFormat.MONTH_DAY_YEAR);
+  }
+  
   public T date(LocalDate localDate, SSMLDateFormat format) {
     addElement(MessageFormat.format(SAY_AS_DATE_TAG, format.asSsml(), localDate.format(dateTimeFormatter)));
 
