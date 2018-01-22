@@ -62,6 +62,50 @@ public abstract class SpeechBuilder<T extends SpeechBuilder<T>> {
     return getThis();
   }
   
+  public T say(int value) {
+    return sayAs(SsmlSayAsType.CARDINAL, Integer.toString(value));  
+  }
+  
+  public T say(double value) {
+    return sayAs(SsmlSayAsType.FRACTION, Double.toString(value));
+  }
+   
+  public T ordinal(int value) {
+    return sayAs(SsmlSayAsType.ORDINAL, Integer.toString(value));
+  }
+  
+  public T telephone(String telephone) {
+    return sayAs(SsmlSayAsType.TELEPHONE, telephone);  
+  }
+  
+  public T address(String address) {
+    return sayAs(SsmlSayAsType.ADDRESS, address);
+  }
+  
+  public T characters(String value) {
+    return sayAs(SsmlSayAsType.CHARACTERS, value);
+  }
+  
+  public T spellOut(String value) {
+    return sayAs(SsmlSayAsType.SPELL_OUT, value);
+  }
+  
+  public T digits(int value) {
+    return digits(Integer.toString(value));
+  }
+  
+  public T digits(String value) {
+    return sayAs(SsmlSayAsType.DIGITS, value);
+  }
+  
+  public T interjection(String value) {
+    return sayAs(SsmlSayAsType.INTERJECTION, value);
+  }
+  
+  public T expletive(String value) {
+    return sayAs(SsmlSayAsType.EXPLETIVE, value);
+  }
+  
   public T say(Supplier<SpeechBuilder<?>> contents) {
     String ssml = contents.get().ssml(true);
     addElement(ssml);
