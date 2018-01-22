@@ -1,8 +1,14 @@
 package conversation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.amazon.speech.slu.Slot;
+import com.amazon.speech.slu.entityresolution.Resolution;
+import com.amazon.speech.slu.entityresolution.Resolutions;
+import com.amazon.speech.slu.entityresolution.ValueWrapper;
 import com.amazon.speech.speechlet.Directive;
 import com.amazon.speech.speechlet.IntentRequest;
 import com.amazon.speech.speechlet.SpeechletResponse;
@@ -70,5 +76,36 @@ public class ResponseHelper {
     Reprompt reprompt = getReprompt(speech);
 
     return SpeechletResponse.newAskResponse(speech, reprompt, card);
+  }
+  
+  static public List<String> calculateSlot(Slot eventSlot) {
+    String event = eventSlot.getValue();
+    log.info("--> Calculating event for spoken word " + event);
+    
+    Resolutions resolutions = eventSlot.getResolutions();
+    if (resolutions == null) {
+      return Arrays.asList(eventSlot.getValue());
+    }
+    
+    List<Resolution> resolutionList = resolutions.getResolutionsPerAuthority();
+    
+    List<String> potentialEvents = new ArrayList<>();
+    
+    for (Resolution resolution : resolutionList) {
+      for (ValueWrapper vw : resolution.getValueWrappers()) {
+        potentialEvents.add(vw.getValue().getName());
+      }
+    }
+    
+    return potentialEvents;
+  }
+  
+  static public SpeechletResponse createSlotValueSelectionRequest(List<String> options) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("Did you mean ");
+    sb.append(options.stream().collect(Collectors.joining(", or ")));
+    String speech = sb.toString();
+    
+    return ResponseHelper.getAskResponse("What did you mean?", speech);
   }
 }
