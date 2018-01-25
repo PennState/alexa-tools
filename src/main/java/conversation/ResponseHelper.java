@@ -3,6 +3,7 @@ package conversation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.amazon.speech.slu.Slot;
@@ -14,6 +15,10 @@ import com.amazon.speech.speechlet.IntentRequest;
 import com.amazon.speech.speechlet.SpeechletResponse;
 import com.amazon.speech.speechlet.dialog.directives.DelegateDirective;
 import com.amazon.speech.speechlet.dialog.directives.DialogIntent;
+import com.amazon.speech.speechlet.interfaces.audioplayer.AudioItem;
+import com.amazon.speech.speechlet.interfaces.audioplayer.PlayBehavior;
+import com.amazon.speech.speechlet.interfaces.audioplayer.Stream;
+import com.amazon.speech.speechlet.interfaces.audioplayer.directive.PlayDirective;
 import com.amazon.speech.ui.OutputSpeech;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
@@ -107,5 +112,25 @@ public class ResponseHelper {
     String speech = sb.toString();
     
     return ResponseHelper.getAskResponse("What did you mean?", speech);
+  }
+  
+  static public List<Directive> buildPlayDirective(String token, long offset, Map<String, String> tokenUrlMap) {
+    log.debug("--> Building the play directive for " + token + " at " + offset);
+    Stream stream = new Stream();
+    stream.setOffsetInMilliseconds(offset);
+    stream.setToken(token);
+    String url = tokenUrlMap.get(token).toString();
+    log.debug("--> Using url {} ", url);
+    stream.setUrl(url);
+    AudioItem audioItem = new AudioItem();
+    audioItem.setStream(stream);
+    PlayDirective playDirective = new PlayDirective();
+    playDirective.setAudioItem(audioItem);
+    playDirective.setPlayBehavior(PlayBehavior.REPLACE_ALL);
+
+    List<Directive> directives = new ArrayList<>();
+    directives.add(playDirective);
+    
+    return directives;
   }
 }
