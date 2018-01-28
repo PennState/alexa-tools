@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
-public class SpeachBuilderTests {
+public class SpeechBuilderTests {
 
   @BeforeEach
   public void init() {

@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.equalTo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class AlexaSpeachBuilderTests {
+public class AlexaSpeechBuilderTests {
 
   @BeforeEach
   public void init() {

@@ -102,6 +102,10 @@ public class ResponseHelper {
       }
     }
     
+    if (potentialEvents.isEmpty()) {
+      potentialEvents.add(event);
+    }
+    
     return potentialEvents;
   }
   
