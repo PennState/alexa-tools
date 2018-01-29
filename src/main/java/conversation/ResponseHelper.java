@@ -104,6 +104,7 @@ public class ResponseHelper {
     
     if (potentialEvents.isEmpty()) {
       potentialEvents.add(event);
+      log.info("Adding {} to potential event values", event);
     }
     
     return potentialEvents;
