@@ -1,6 +1,7 @@
 .classpath
 .project
-.settings
+.settings/
 .factorypath
 .vagrant
-target
+target/
+.vscode/
